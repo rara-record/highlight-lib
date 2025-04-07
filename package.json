@@ -1,0 +1,24 @@
+{
+  "name": "highlight-lib",
+  "version": "0.0.0",
+  "description": "A monorepo for developing a React DOM text-highlighting library with examples using Vite and modern tooling.",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "format": "biome format . --write",
+    "check": "biome check .",
+    "format:all": "pnpm -r run format",
+    "check:all": "pnpm -r run check"
+  },
+  "author": "rara",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "type": "module",
+  "workspaces": ["packages/*", "examples/*"],
+  "devDependencies": {
+    "biome": "^0.3.3"
+  },
+  "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
+}
