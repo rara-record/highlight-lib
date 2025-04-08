@@ -17,7 +17,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup"
@@ -44,5 +46,8 @@
   },
   "engines": {
     "node": ">=16.14.0"
+  },
+  "dependencies": {
+    "style-object-to-css-string": "^1.1.3"
   }
 }
