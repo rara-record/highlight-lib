@@ -6,7 +6,8 @@ interface TextKeywordHighlighterProps {
   keywords: string[] | string;
   highlightClassName?: string;
   highlightStyle?: HighlightSupportedStyle;
-  caseSensitive?: boolean;
+  highlightCaseSensitive?: boolean;
+  highlightEscape?: boolean;
   onHighlight?: (ranges: StaticRange[]) => void;
 }
 /**
@@ -30,6 +31,8 @@ interface TextKeywordHighlighterProps {
  * @param keywords - 강조할 키워드
  * @param highlightClassName - (선택) 하이라이트 이름 (CSS의 `::highlight()` selector에 사용됨)
  * @param highlightStyle - (선택) 직접 적용할 스타일 객체 (JS에서 지정)
+ * @param highlightCaseSensitive - (선택) 대소문자 구분 여부 (기본값: false)
+ * @param highlightEscape - (선택) 특수 문자 이스케이프 여부 (기본값: false)
  * @param onHighlight - (선택) 적용된 StaticRange 목록을 전달하는 콜백
  * @param children - `ref`를 인자로 받는 render prop 함수 (DOM 요소 연결용)
  *
@@ -50,12 +53,15 @@ export const TextKeywordHighlighter = ({
   keywords,
   highlightClassName,
   highlightStyle,
-  caseSensitive,
+  highlightCaseSensitive,
+  highlightEscape,
   onHighlight,
 }: TextKeywordHighlighterProps) => {
   const ref = useTextKeywordHighlight<HTMLElement>(keywords, {
     highlightClassName,
     highlightStyle,
+    highlightCaseSensitive,
+    highlightEscape,
     onHighlight,
   });
 

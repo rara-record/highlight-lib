@@ -7,6 +7,8 @@ interface TextKeywordHighlightOptions {
   highlightName?: string;
   highlightClassName?: string;
   highlightStyle?: HighlightSupportedStyle;
+  highlightCaseSensitive?: boolean;
+  highlightEscape?: boolean;
   onHighlight?: (ranges: StaticRange[]) => void;
 }
 
@@ -28,11 +30,15 @@ interface TextKeywordHighlightOptions {
  *
  * @param keywords - 강조할 키워드
  * @param options - 하이라이트 이름, 스타일, 하이라이트 완료 후 호출될 콜백 등
+ * @param highlightCaseSensitive - (선택) 대소문자 구분 여부 (기본값: false)
+ * @param highlightEscape - (선택) 특수 문자 이스케이프 여부 (기본값: false)
  * @returns React ref - 강조할 DOM 요소에 연결해야 할 ref 객체
  *
  * @example
  * const ref = useTextKeywordHighlight('React', {
  *   highlightClassName: 'my-highlight',
+ *   highlightCaseSensitive: true,
+ *   highlightEscape: false,
  *   onHighlight: (ranges) => console.log('하이라이트된 범위:', ranges),
  * });
  *
@@ -54,6 +60,8 @@ export function useTextKeywordHighlight<T extends HTMLElement>(
       root: ref.current,
       keywords,
       highlightName,
+      highlightCaseSensitive: options?.highlightCaseSensitive,
+      highlightEscape: options?.highlightEscape,
     });
 
     options?.onHighlight?.(ranges);
