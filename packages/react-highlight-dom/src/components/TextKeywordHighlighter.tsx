@@ -27,7 +27,7 @@ interface TextKeywordHighlighterProps {
  * }
  * ```
  *
- * @param keyword - 강조할 키워드
+ * @param keywords - 강조할 키워드
  * @param highlightClassName - (선택) 하이라이트 이름 (CSS의 `::highlight()` selector에 사용됨)
  * @param highlightStyle - (선택) 직접 적용할 스타일 객체 (JS에서 지정)
  * @param onHighlight - (선택) 적용된 StaticRange 목록을 전달하는 콜백

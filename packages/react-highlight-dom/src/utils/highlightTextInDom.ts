@@ -9,8 +9,6 @@ interface HighlightTextParams {
  *
  * 이 함수는 텍스트 노드를 순회하며 `keywords`와 일치하는 모든 영역을 탐색하고,
  * 해당 영역을 `StaticRange`로 생성한 후 CSS Highlight에 등록합니다.
- *
- * 검색은 대소문자를 구분하지 않으며, 일치하는 모든 노드를 강조합니다.
  * 만약 키워드가 비어 있거나 CSS Highlight API를 사용할 수 없는 환경에서는
  * 기존 하이라이트를 제거하고 빈 배열을 반환합니다.
  *
@@ -38,20 +36,21 @@ export function highlightTextInDom({
     return [];
   }
 
+  const processedNodes = new WeakSet<Node>();
   const highlight = new Highlight();
   const ranges: StaticRange[] = [];
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
 
   while (walker.nextNode()) {
     const node = walker.currentNode as Text;
-    const text = node.nodeValue;
-    if (!text) continue;
+    if (processedNodes.has(node)) continue;
+
+    const text = node.nodeValue || '';
 
     const lowerText = text.toLowerCase();
 
     for (const keyword of lowerKeywords) {
       let index = 0;
-
       index = lowerText.indexOf(keyword, index);
 
       while (index !== -1) {
@@ -62,22 +61,15 @@ export function highlightTextInDom({
           endOffset: index + keyword.length,
         });
 
-        if (
-          !ranges.some(
-            (r) =>
-              r.startContainer === range.startContainer &&
-              r.startOffset === range.startOffset &&
-              r.endOffset === range.endOffset
-          )
-        ) {
-          highlight.add(range);
-          ranges.push(range);
-        }
+        highlight.add(range);
+        ranges.push(range);
 
         index += keyword.length;
         index = lowerText.indexOf(keyword, index);
       }
     }
+
+    processedNodes.add(node);
   }
 
   CSS.highlights.set(highlightName, highlight);
