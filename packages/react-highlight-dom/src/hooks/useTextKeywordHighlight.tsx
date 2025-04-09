@@ -26,7 +26,7 @@ interface TextKeywordHighlightOptions {
  * }
  * ```
  *
- * @param keyword - 강조할 키워드
+ * @param keywords - 강조할 키워드
  * @param options - 하이라이트 이름, 스타일, 하이라이트 완료 후 호출될 콜백 등
  * @returns React ref - 강조할 DOM 요소에 연결해야 할 ref 객체
  *
@@ -39,7 +39,7 @@ interface TextKeywordHighlightOptions {
  * return <div ref={ref}>React가 좋아요.</div>;
  */
 export function useTextKeywordHighlight<T extends HTMLElement>(
-  keyword: string,
+  keywords: string | string[],
   options?: TextKeywordHighlightOptions
 ): React.RefObject<T> {
   const { ref, highlightName } = useHighlightStyle<T>(
@@ -52,12 +52,12 @@ export function useTextKeywordHighlight<T extends HTMLElement>(
 
     const ranges = highlightTextInDom({
       root: ref.current,
-      keyword,
+      keywords,
       highlightName,
     });
 
     options?.onHighlight?.(ranges);
-  }, [keyword, highlightName, options, ref.current]);
+  }, [keywords, highlightName, options, ref.current]);
 
   return ref;
 }

@@ -19,7 +19,7 @@ function App() {
       />
 
       <TextKeywordHighlighter
-        keyword={keyword}
+        keywords={['maxime', 'dolor', 'quis']}
         highlightClassName="search-highlight"
         // highlightStyle={{ backgroundColor: 'orange', color: 'white' }}
         onHighlight={(ranges) => console.log('하이라이트 범위:', ranges)}

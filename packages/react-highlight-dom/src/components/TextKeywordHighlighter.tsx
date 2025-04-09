@@ -3,9 +3,10 @@ import type { HighlightSupportedStyle } from '../types/HighlightSupportedStyle';
 
 interface TextKeywordHighlighterProps {
   children: (ref: React.RefObject<any>) => React.ReactNode;
-  keyword: string;
+  keywords: string[] | string;
   highlightClassName?: string;
   highlightStyle?: HighlightSupportedStyle;
+  caseSensitive?: boolean;
   onHighlight?: (ranges: StaticRange[]) => void;
 }
 /**
@@ -46,12 +47,13 @@ interface TextKeywordHighlighterProps {
  */
 export const TextKeywordHighlighter = ({
   children,
-  keyword,
+  keywords,
   highlightClassName,
   highlightStyle,
+  caseSensitive,
   onHighlight,
 }: TextKeywordHighlighterProps) => {
-  const ref = useTextKeywordHighlight<HTMLElement>(keyword, {
+  const ref = useTextKeywordHighlight<HTMLElement>(keywords, {
     highlightClassName,
     highlightStyle,
     onHighlight,
