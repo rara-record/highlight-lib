@@ -1,5 +1,7 @@
 import { findRangesInNode } from './findRangesInNode';
-import { createRegexKeywords } from './createRegexKeywords';
+import { createRegexKeywords, normalizeKeywords } from './createRegexKeywords';
+
+import type { FindChunksFunction } from '../types/FindChunksOptions';
 
 interface HighlightTextParams {
   root: Node;
@@ -7,6 +9,7 @@ interface HighlightTextParams {
   highlightName: string;
   highlightCaseSensitive?: boolean;
   highlightEscape?: boolean;
+  findChunks?: FindChunksFunction;
 }
 
 /**
@@ -22,6 +25,7 @@ interface HighlightTextParams {
  * @param highlightName - CSS Highlight 이름 (`::highlight(<name>)`으로 스타일링 가능)
  * @param highlightCaseSensitive - (선택) 대소문자 구분 여부 (기본값: false)
  * @param highlightEscape - (선택) 특수 문자 이스케이프 여부 (기본값: false)
+ * @param findChunks - (선택) 키워드에 대한 청크를 찾는 함수
  * @returns 생성된 StaticRange 객체들의 배열
  */
 
@@ -31,12 +35,14 @@ export function highlightTextInDom({
   highlightName,
   highlightCaseSensitive = false,
   highlightEscape = false,
+  findChunks,
 }: HighlightTextParams): StaticRange[] {
   if (!window.CSS?.highlights) return [];
 
-  const normalizedKeywords = Array.isArray(keywords) ? keywords : [keywords];
+  const normalizedKeywords = normalizeKeywords(keywords);
 
-  if (normalizedKeywords.length === 0) {
+  const hasValidKeyword = normalizedKeywords.length > 0;
+  if (!hasValidKeyword) {
     CSS.highlights.delete(highlightName);
     return [];
   }
@@ -54,7 +60,24 @@ export function highlightTextInDom({
     const node = walker.currentNode as Text;
     let nodeRanges: StaticRange[] = [];
 
-    nodeRanges = findRangesInNode(node, patterns, highlightCaseSensitive);
+    if (findChunks) {
+      const chunks = findChunks({
+        patterns,
+        textContent: node.textContent || '',
+      });
+
+      nodeRanges = chunks.map(
+        (chunk) =>
+          new StaticRange({
+            startContainer: node,
+            startOffset: chunk.start,
+            endContainer: node,
+            endOffset: chunk.end,
+          })
+      );
+    } else {
+      nodeRanges = findRangesInNode(node, patterns, highlightCaseSensitive);
+    }
 
     for (const range of nodeRanges) {
       highlight.add(range);

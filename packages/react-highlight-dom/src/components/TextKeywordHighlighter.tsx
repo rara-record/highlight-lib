@@ -1,4 +1,5 @@
 import { useTextKeywordHighlight } from '../hooks/useTextKeywordHighlight';
+import type { FindChunksFunction } from '../types/FindChunksOptions';
 import type { HighlightSupportedStyle } from '../types/HighlightSupportedStyle';
 
 interface TextKeywordHighlighterProps {
@@ -8,6 +9,7 @@ interface TextKeywordHighlighterProps {
   highlightStyle?: HighlightSupportedStyle;
   highlightCaseSensitive?: boolean;
   highlightEscape?: boolean;
+  findChunks?: FindChunksFunction;
   onHighlight?: (ranges: StaticRange[]) => void;
 }
 /**
@@ -55,6 +57,7 @@ export const TextKeywordHighlighter = ({
   highlightStyle,
   highlightCaseSensitive,
   highlightEscape,
+  findChunks,
   onHighlight,
 }: TextKeywordHighlighterProps) => {
   const ref = useTextKeywordHighlight<HTMLElement>(keywords, {
@@ -62,6 +65,7 @@ export const TextKeywordHighlighter = ({
     highlightStyle,
     highlightCaseSensitive,
     highlightEscape,
+    findChunks,
     onHighlight,
   });
 

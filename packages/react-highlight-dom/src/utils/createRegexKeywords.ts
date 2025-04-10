@@ -18,18 +18,16 @@ export function escapeRegex(keyword: string): string {
 }
 
 /**
- * 키워드 배열을 정리하고 정규식 배열을 생성합니다.
- * @returns 정규식 배열
+ * 키워드 배열을 정규식 배열로 변환합니다.
  */
 export function createRegexKeywords(
-  keywords: string | string[],
+  keywords: string[],
   highlightCaseSensitive = false,
   highlightEscape = false
 ): RegExp[] {
-  const normalizedKeywords = normalizeKeywords(keywords);
   const flags = highlightCaseSensitive ? 'g' : 'gi';
 
-  return normalizedKeywords.map((keyword) => {
+  return keywords.map((keyword) => {
     const processedKeyword = highlightEscape ? escapeRegex(keyword) : keyword;
     return new RegExp(processedKeyword, flags);
   });

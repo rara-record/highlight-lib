@@ -3,12 +3,15 @@ import { useHighlightStyle } from './useHighlightStyle';
 import { highlightTextInDom } from '../utils/highlightTextInDom';
 import type { HighlightSupportedStyle } from '../types/HighlightSupportedStyle';
 
+import type { FindChunksFunction, TextChunk } from '../types/FindChunksOptions';
+
 interface TextKeywordHighlightOptions {
   highlightName?: string;
   highlightClassName?: string;
   highlightStyle?: HighlightSupportedStyle;
   highlightCaseSensitive?: boolean;
   highlightEscape?: boolean;
+  findChunks?: FindChunksFunction;
   onHighlight?: (ranges: StaticRange[]) => void;
 }
 
@@ -62,6 +65,7 @@ export function useTextKeywordHighlight<T extends HTMLElement>(
       highlightName,
       highlightCaseSensitive: options?.highlightCaseSensitive,
       highlightEscape: options?.highlightEscape,
+      findChunks: options?.findChunks,
     });
 
     options?.onHighlight?.(ranges);
