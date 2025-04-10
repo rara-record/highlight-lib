@@ -1,7 +1,12 @@
+import { findRangesInNode } from './findRangesInNode';
+import { createRegexKeywords } from './createRegexKeywords';
+
 interface HighlightTextParams {
   root: Node;
   keywords: string | string[];
   highlightName: string;
+  highlightCaseSensitive?: boolean;
+  highlightEscape?: boolean;
 }
 
 /**
@@ -26,19 +31,12 @@ export function highlightTextInDom({
   highlightName,
   highlightCaseSensitive = false,
   highlightEscape = false,
-}: HighlightTextParams & {
-  highlightCaseSensitive?: boolean;
-  highlightEscape?: boolean;
-}): StaticRange[] {
+}: HighlightTextParams): StaticRange[] {
   if (!window.CSS?.highlights) return [];
 
   const normalizedKeywords = Array.isArray(keywords) ? keywords : [keywords];
 
-  const processedKeywords = normalizedKeywords
-    .map((keyword) => keyword.trim())
-    .filter((keyword) => keyword.length > 0);
-
-  if (processedKeywords.length === 0) {
+  if (normalizedKeywords.length === 0) {
     CSS.highlights.delete(highlightName);
     return [];
   }
@@ -48,36 +46,21 @@ export function highlightTextInDom({
   const ranges: StaticRange[] = [];
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
 
+  const patterns = highlightEscape
+    ? createRegexKeywords(normalizedKeywords, highlightCaseSensitive, true)
+    : normalizedKeywords;
+
   while (walker.nextNode()) {
     const node = walker.currentNode as Text;
-    if (processedNodes.has(node)) continue;
+    let nodeRanges: StaticRange[] = [];
 
-    const text = node.nodeValue || '';
+    nodeRanges = findRangesInNode(node, patterns, highlightCaseSensitive);
 
-    const targetText = highlightCaseSensitive ? text : text.toLowerCase();
-
-    for (const keyword of processedKeywords) {
-      const targetKeyword = highlightCaseSensitive ? keyword : keyword.toLowerCase();
-
-      let index = 0;
-      index = targetText.indexOf(targetKeyword, index);
-
-      while (index !== -1) {
-        const range = new StaticRange({
-          startContainer: node,
-          startOffset: index,
-          endContainer: node,
-          endOffset: index + keyword.length,
-        });
-
-        highlight.add(range);
-        ranges.push(range);
-
-        index += targetKeyword.length;
-        index = targetText.indexOf(targetKeyword, index);
-      }
+    for (const range of nodeRanges) {
+      highlight.add(range);
     }
 
+    ranges.push(...nodeRanges);
     processedNodes.add(node);
   }
 
