@@ -2,15 +2,15 @@ const ExampleComponent = ({ ref }: { ref: React.Ref<HTMLParagraphElement> }) => 
   return (
     <>
       <p ref={ref} className="example-text">
-        Maxime debitis hic, delectus perspiciatis laborum molestiae labore, deleniti, quam
-        consequatur iure veniam alias voluptas nisi quo. Dolorem eaque alias, quo vel quas
-        repudiandae architecto deserunt quidem, sapiente laudantium nulla. Maiores odit molestias,
-        necessitatibus doloremque dolor illum reprehenderit provident nostrum laboriosam iste,
-        tempore perferendis! Ab porro neque esse voluptas libero necessitatibus fugiat, ex, minus
-        atque deserunt veniam molestiae tempora? Vitae. Dolorum facilis voluptate eaque eius
-        similique ducimus dignissimos assumenda quos architecto. Doloremque deleniti non
-        exercitationem rerum quam alias harum, nisi obcaecati corporis temporibus vero sapiente
-        voluptatum est quibusdam id ipsa.
+        {/* [VIP] 50% (important) file_v1x2 file_v1.2 React important_thing (React.js) React.js VIP
+        [VIP]', '(React.js)', '50%', 'important', 'file_v1x2', 'file_v1.2 React React */}
+        It is a long established fact that a reader will be distracted by the readable content of a
+        page when looking at its layout. The point of using Lorem Ipsum is that it has a
+        more-or-less normal distribution of letters, as opposed to using 'Content here, content
+        here', making it look like readable English. Many desktop publishing packages and web page
+        editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will
+        uncover many web sites still in their infancy. Various versions have evolved over the years,
+        sometimes by accident, sometimes on purpose (injected humour and the like).
       </p>
     </>
   );
