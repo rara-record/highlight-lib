@@ -1,11 +1,11 @@
-# react-highlight-dom
+# react-highlight
 
 ## 📁 Structure
 
 ```text
 highlight-lib/
 ├── packages/
-│   └── react-highlight-dom/   # Main React library
+│   └── react-highlight/   # Main React library
 ├── examples/
 │   └── app1/            # Example app using the library
 │   └── app2/            # Example app using the library
@@ -25,3 +25,5 @@ pnpm dev
 예제 앱들을 Vite 개발 서버로 실행합니다.
 
 | ✅ 예제 앱은 자동으로 실행되므로, 별도로 cd로 들어가서 실행할 필요 없습니다.
+
+## Demo
