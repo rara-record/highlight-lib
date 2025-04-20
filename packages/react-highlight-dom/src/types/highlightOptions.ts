@@ -5,10 +5,10 @@ interface BaseHighlightOptions {
   highlightClassName?: string;
   highlightStyle?: HighlightSupportedStyle;
   onHighlight?: (ranges: StaticRange[]) => void;
+  children: (ref: React.RefObject<any>) => React.ReactNode;
 }
 
 export interface KeywordsHighlightOptions extends BaseHighlightOptions {
-  type: 'keywords';
   keywords: string | string[];
   highlightCaseSensitive?: boolean;
   highlightEscape?: boolean;
@@ -16,7 +16,6 @@ export interface KeywordsHighlightOptions extends BaseHighlightOptions {
 }
 
 export interface FindChunksHighlightOptions extends BaseHighlightOptions {
-  type: 'custom';
   findChunks: FindChunksFunction;
   keywords?: never;
   highlightCaseSensitive?: never;

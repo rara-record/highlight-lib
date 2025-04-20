@@ -2,8 +2,6 @@
  * 텍스트 청크를 찾기 위한 옵션 인터페이스
  */
 export interface FindChunksOptions {
-  /** 검색할 패턴 배열 (문자열 또는 정규식) */
-  patterns: Array<string | RegExp>;
   /** 검색 대상 텍스트 */
   textContent: string;
 }

@@ -1,7 +1,18 @@
 import { useEffect } from 'react';
 import { useHighlightStyle } from './useHighlightStyle';
 import { highlightTextInDom } from '../utils/highlightTextInDom';
-import { HighlightOptions } from '../types/highlightOptions';
+import { FindChunksFunction } from '../types/FindChunksOptions';
+import { HighlightSupportedStyle } from '../types/HighlightSupportedStyle';
+
+interface UseHighlightProps {
+  keywords?: string | string[];
+  highlightClassName?: string;
+  highlightStyle?: HighlightSupportedStyle;
+  highlightCaseSensitive?: boolean;
+  highlightEscape?: boolean;
+  findChunks?: FindChunksFunction;
+  onHighlight?: (ranges: StaticRange[]) => void;
+}
 
 /**
  * `useHighlight` 훅은 DOM 요소 내 텍스트를 CSS Highlight API를 사용해 강조합니다.
@@ -26,6 +37,10 @@ import { HighlightOptions } from '../types/highlightOptions';
  * @param options - 하이라이트 이름, 스타일, 하이라이트 완료 후 호출될 콜백 등
  * @param highlightCaseSensitive - (선택) 대소문자 구분 여부 (기본값: false)
  * @param highlightEscape - (선택) 특수 문자 이스케이프 여부 (기본값: false)
+ * @param onHighlight - (선택) 적용된 StaticRange 목록을 전달하는 콜백
+ * @param findChunks - (선택) 사용자 정의 청크 찾기 함수
+ * @param highlightClassName - (선택) 하이라이트 이름 (CSS의 `::highlight()` selector에 사용됨)
+ * @param highlightStyle - (선택) 직접 적용할 스타일 객체 (JS에서 지정)
  * @returns React ref - 강조할 DOM 요소에 연결해야 할 ref 객체
  *
  * @example
@@ -38,8 +53,10 @@ import { HighlightOptions } from '../types/highlightOptions';
  *
  * return <div ref={ref}>React가 좋아요.</div>;
  */
-export function useHighlight<T extends HTMLElement>(options: HighlightOptions): React.RefObject<T> {
-  const { ref, highlightName } = useHighlightStyle<T>(
+export function useHighlight<T extends HTMLElement>(
+  options: UseHighlightProps
+): React.RefObject<T> {
+  const { ref, defaultClassName } = useHighlightStyle<T>(
     options?.highlightClassName,
     options?.highlightStyle
   );
@@ -49,12 +66,12 @@ export function useHighlight<T extends HTMLElement>(options: HighlightOptions): 
 
     const ranges = highlightTextInDom({
       root: ref.current,
-      highlightName,
       ...options,
+      highlightClassName: defaultClassName,
     });
 
     options?.onHighlight?.(ranges);
-  }, [highlightName, options, ref.current]);
+  }, [options, ref.current]);
 
   return ref;
 }

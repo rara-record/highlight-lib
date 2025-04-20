@@ -1,17 +1,31 @@
 import { useHighlight } from '../hooks/useHighlight';
 import type { FindChunksFunction } from '../types/FindChunksOptions';
+import { HighlightOptions } from '../types/highlightOptions';
 import type { HighlightSupportedStyle } from '../types/HighlightSupportedStyle';
 
-interface HighlighterProps {
-  children: (ref: React.RefObject<any>) => React.ReactNode;
-  keywords?: string[] | string;
+interface BaseHighlighterProps {
   highlightClassName?: string;
   highlightStyle?: HighlightSupportedStyle;
+  onHighlight?: (ranges: StaticRange[]) => void;
+  children: (ref: React.RefObject<any>) => React.ReactNode;
+}
+
+interface KeywordsProps extends BaseHighlighterProps {
+  keywords: string | string[];
   highlightCaseSensitive?: boolean;
   highlightEscape?: boolean;
-  findChunks?: FindChunksFunction;
-  onHighlight?: (ranges: StaticRange[]) => void;
+  findChunks?: never;
 }
+
+interface FindChunksProps extends BaseHighlighterProps {
+  findChunks: FindChunksFunction;
+  keywords?: never;
+  highlightCaseSensitive?: never;
+  highlightEscape?: never;
+}
+
+type HighlighterProps = KeywordsProps | FindChunksProps;
+
 /**
  * `<Highlighter />`는 주어진 키워드를 기준으로
  * 자식 DOM 요소 내 텍스트를 강조하는 React 컴포넌트입니다.
@@ -54,18 +68,20 @@ interface HighlighterProps {
  *
  * @returns render prop을 통해 하이라이트 대상 DOM에 연결 가능한 `ref`를 주입합니다.
  */
-export const Highlighter = ({
-  children,
-  keywords = '',
-  highlightClassName,
-  highlightStyle,
-  highlightCaseSensitive,
-  highlightEscape,
-  findChunks,
-  onHighlight,
-}: HighlighterProps) => {
-  const ref = useHighlight<HTMLElement>({
-    ...(findChunks
+export const Highlighter = (props: HighlightOptions) => {
+  const {
+    keywords,
+    highlightClassName,
+    highlightStyle,
+    highlightCaseSensitive,
+    highlightEscape,
+    onHighlight,
+    findChunks,
+    children,
+  } = props;
+
+  const options =
+    'findChunks' in props
       ? {
           findChunks,
           highlightClassName,
@@ -74,13 +90,14 @@ export const Highlighter = ({
         }
       : {
           keywords,
-          highlightClassName,
-          highlightStyle,
           highlightCaseSensitive,
           highlightEscape,
+          highlightClassName,
+          highlightStyle,
           onHighlight,
-        }),
-  });
+        };
+
+  const ref = useHighlight<HTMLElement>(options);
 
   return <>{children(ref)}</>;
 };
