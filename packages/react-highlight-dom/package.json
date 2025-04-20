@@ -1,6 +1,6 @@
 {
   "name": "react-highlight-dom",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "A lightweight React library for highlighting text within the DOM.",
   "type": "module",
   "sideEffects": false,
@@ -13,6 +13,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
